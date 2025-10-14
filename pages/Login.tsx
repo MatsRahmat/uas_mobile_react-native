@@ -1,12 +1,14 @@
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, GestureResponderEvent, ActivityIndicator } from "react-native";
 import SafeArea from "../components/SafeArea";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../App";
 
 const TIME_DELAY = 3000;
 
 export default function LoginScreen() {
 
+    const { login, isLogin } = useContext(AuthContext);
     const navigation = useNavigation();
 
     const [email, setEmail] = useState('');
@@ -27,6 +29,7 @@ export default function LoginScreen() {
         setLoading(true);
         if (validateInput()) {
             setTimeout(() => {
+                login('tokenBase64', { email: "user@mail.com", username: "Jajang" });
                 navigation.navigate('home', { token: "ini_token_user" });
                 setLoading(false);
             }, TIME_DELAY)
@@ -42,6 +45,12 @@ export default function LoginScreen() {
             </View>
         )
     }
+
+    useEffect(() => {
+        if (isLogin) {
+            navigation.navigate('home');
+        }
+    }, [isLogin])
 
     return (
         <SafeArea>
