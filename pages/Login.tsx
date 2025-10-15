@@ -1,15 +1,21 @@
 import { StyleSheet, Text, TouchableOpacity, View, TextInput, GestureResponderEvent, ActivityIndicator } from "react-native";
+import * as React from 'react';
 import SafeArea from "../components/SafeArea";
 import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../App";
+import { AuthContext } from "../context/AuthContext";
+import LoadingComponent from "../components/ui/LoadingComponent";
+import { globalStyle } from "../utils/styles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Button } from "@react-navigation/elements";
 
 const TIME_DELAY = 3000;
 
 export default function LoginScreen() {
 
-    const { login, isLogin } = useContext(AuthContext);
+    const { setter, state } = useContext(AuthContext);
     const navigation = useNavigation();
+    const inset = useSafeAreaInsets();
 
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
@@ -20,52 +26,48 @@ export default function LoginScreen() {
         if (!email || !pass) {
             valid = false;
         }
-
         return valid;
     }
 
     // Simulasi fetch data dari API
-    const handleSubmit = (event: GestureResponderEvent) => {
+    const handleSubmit = () => {
         setLoading(true);
-        if (validateInput()) {
-            setTimeout(() => {
-                login('tokenBase64', { email: "user@mail.com", username: "Jajang" });
-                navigation.navigate('home', { token: "ini_token_user" });
+        setTimeout(() => {
+            if (validateInput()) {
+                setter.login(email, pass);
+                navigation.navigate('home' as never);
                 setLoading(false);
-            }, TIME_DELAY)
-        } else {
-            setLoading(false);
-        }
+            } else {
+                setLoading(false);
+            }
+        }, TIME_DELAY)
     }
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: "center" }}>
-                <ActivityIndicator size={45} animating />
-            </View>
+            <LoadingComponent />
         )
     }
 
-    useEffect(() => {
-        if (isLogin) {
-            navigation.navigate('home');
-        }
-    }, [isLogin])
-
     return (
         <SafeArea>
-            <View style={styles.container}>
-                <View style={styles.containerInput}>
-                    <Text style={styles.title}>
-                        Login
-                    </Text>
-                    <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="john@mail.com" />
-                    <TextInput style={styles.input} value={pass} onChangeText={setPass} placeholder="**********" />
-                    <TouchableOpacity onPress={handleSubmit} style={styles.button} disabled={loading}>
-                        <Text style={{ color: "#fff", fontWeight: 600, padding: 8, textAlign: "center" }}>
+            <View style={[globalStyle.container, { paddingInline: "13%", justifyContent: "flex-start", paddingTop: 25 }]}>
+                <View>
+                    <Text style={[globalStyle.header, globalStyle.textCenter, {
+                        fontSize: 34
+                    }]}>Login</Text>
+                </View>
+                <View style={[globalStyle.border, { padding: 9, marginTop: 20 }]}>
+                    <Text style={{ marginBlock: 4 }}>Email:</Text>
+                    <TextInput value={email} placeholder="john@mail.com" onChangeText={setEmail} style={[globalStyle.input]} />
+                    <Text style={{ marginBlock: 4 }}>Password:</Text>
+                    <TextInput value={pass} placeholder="******" onChangeText={setPass} style={[globalStyle.input]} />
+                    <TouchableOpacity onPress={handleSubmit} style={[globalStyle.button, globalStyle.bgSky, { marginBlock: 12, borderRadius: 5, }]}>
+                        <Text style={{ color: "#fff", fontSize: 18, fontWeight: 600 }}>
                             Submit
                         </Text>
                     </TouchableOpacity>
+
                 </View>
             </View>
         </SafeArea>

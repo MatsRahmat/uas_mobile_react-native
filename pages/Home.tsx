@@ -1,54 +1,50 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import * as React from 'react';
 import SafeArea from "../components/SafeArea";
 import { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../App";
+import { AuthContext } from "../context/AuthContext";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import UserList from "./UserList";
+import ProductList from "./ProductList";
+import MaterialIcons from "@react-native-vector-icons/material-icons";
 
 export default function HomeScreen() {
 
-    const { isLogin, logout } = useContext(AuthContext);
     const navigation = useNavigation();
+    const { state, setter } = useContext(AuthContext);
 
 
     const handleNavigate = (path: string) => {
-        navigation.navigate(path);
+        navigation.navigate(path as never);
     }
 
 
     useEffect(() => {
-        if (!isLogin) {
-            navigation.navigate('login');
+        console.log(state.isLogin)
+        if (!state.isLogin) {
+            handleNavigate('login');
         }
-    }, [isLogin]);
+    }, [state.isLogin]);
+
+    useEffect(() => {
+        //TODO: On mounted set users and product
+        // setter.setUser();
+    },[])
+
+    const Tabs = createBottomTabNavigator();
 
     return (
         <>
-            <SafeArea>
-                <>
-                    <View style={{ padding: 10 }}>
-                        <Text style={styles.textTitle}>
-                            Home Page
-                        </Text>
-                    </View>
-                    <View style={styles.continer}>
-                        <TouchableOpacity onPress={() => handleNavigate('product')} style={{ ...styles.button, ...styles.bgBlue }}>
-                            <Text style={styles.textBtn}>
-                                Product
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleNavigate('profile')} style={{ ...styles.button, ...styles.bgBlue }}>
-                            <Text style={styles.textBtn}>
-                                Profile
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={logout} style={{ ...styles.button, ...styles.bgOrange }}>
-                            <Text style={styles.textBtn}>
-                                Logout
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </>
-            </SafeArea>
+            <Tabs.Navigator screenOptions={{ headerShown: false }}>
+                <Tabs.Screen name="users" component={UserList} options={{
+                    headerShown:true,
+                    tabBarIcon: ({ focused, color, size }) => {
+                        return <MaterialIcons name="format-list-bulleted" color={color} size={size} />
+                    }
+                }} />
+                <Tabs.Screen name="products" component={ProductList} />
+            </Tabs.Navigator>
         </>
     )
 }
