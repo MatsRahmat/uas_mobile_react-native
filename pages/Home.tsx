@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as React from 'react';
-import SafeArea from "../components/SafeArea";
 import { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/AuthContext";
@@ -30,7 +29,7 @@ export default function HomeScreen() {
     useEffect(() => {
         //TODO: On mounted set users and product
         // setter.setUser();
-    },[])
+    }, [])
 
     const Tabs = createBottomTabNavigator();
 
@@ -38,12 +37,16 @@ export default function HomeScreen() {
         <>
             <Tabs.Navigator screenOptions={{ headerShown: false }}>
                 <Tabs.Screen name="users" component={UserList} options={{
-                    headerShown:true,
+                    headerShown: false,
                     tabBarIcon: ({ focused, color, size }) => {
                         return <MaterialIcons name="format-list-bulleted" color={color} size={size} />
                     }
                 }} />
-                <Tabs.Screen name="products" component={ProductList} />
+                <Tabs.Screen name="products" component={ProductList} options={{
+                    tabBarIcon: ({ focused, color, size }) => {
+                        return <MaterialIcons name="propane-tank" color={color} size={size} />
+                    }
+                }} />
             </Tabs.Navigator>
         </>
     )

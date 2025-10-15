@@ -54,5 +54,6 @@ export const globalStyle = StyleSheet.create({
   },
   bgSky: {
     backgroundColor: "#00bcff"
-  }
+  },
+  
 });

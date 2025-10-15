@@ -123,6 +123,8 @@ export default function App() {
         <Stack.Navigator initialRouteName='home'>
           <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='home' component={HomeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='detail_user' component={HomeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='detail_product' component={HomeScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
