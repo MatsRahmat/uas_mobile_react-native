@@ -12,7 +12,7 @@ export const globalStyle = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: 700,
   },
   textCenter: {
