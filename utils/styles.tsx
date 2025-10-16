@@ -5,6 +5,10 @@ export const globalStyle = StyleSheet.create({
     fontFamily: "sans",
   },
   container: {
+    padding: 4,
+    margin: 2
+  },
+  full: {
     flex: 1,
   },
   center: {
@@ -55,5 +59,5 @@ export const globalStyle = StyleSheet.create({
   bgSky: {
     backgroundColor: "#00bcff"
   },
-  
+
 });

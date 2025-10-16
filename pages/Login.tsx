@@ -6,8 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/AuthContext";
 import LoadingComponent from "../components/ui/LoadingComponent";
 import { globalStyle } from "../utils/styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "@react-navigation/elements";
 
 const TIME_DELAY = 3000;
 
@@ -15,7 +13,6 @@ export default function LoginScreen() {
 
     const { setter, state } = useContext(AuthContext);
     const navigation = useNavigation();
-    const inset = useSafeAreaInsets();
 
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
@@ -45,7 +42,9 @@ export default function LoginScreen() {
 
     if (loading) {
         return (
-            <LoadingComponent />
+            <View style={[globalStyle.container, globalStyle.center, globalStyle.full]}>
+                <LoadingComponent size={50} />
+            </View>
         )
     }
 

@@ -6,23 +6,20 @@ import LoginScreen from './pages/Login';
 import HomeScreen from './pages/Home';
 import React, { createContext, useReducer, useState } from 'react';
 import { AuthContext } from './context/AuthContext';
+import DetailUser from './pages/DetailUser';
+import DetailProduct from './pages/DetailProduct';
+
+import type { ProductType } from "./types/GlobalTypes";
 
 const Stack = createNativeStackNavigator();
 
-interface UserInterface {
+export interface UserInterface {
   email: string,
   username: string,
   age: number,
   id: number
 }
 
-export type ProductType = {
-  id: number,
-  name: string,
-  price: number,
-  desc?: string
-  image?: string,
-}
 
 export type InitState = {
   loading: boolean,
@@ -44,8 +41,8 @@ export default function App() {
 
   const initState: InitState = {
     loading: false,
-    isLogin: true, // bypass for development
-    token: "dadadasdas asdasdasdas asda sd",
+    isLogin: false, // bypass for development
+    token: "",
     user: null,
     users: [],
     product: []
@@ -88,6 +85,17 @@ export default function App() {
           ...prevVal,
           token: action.payload
         }
+      case ACTION_TYPE.SET_PRODUCTS:
+        return {
+          ...prevVal,
+          product: action.payload
+        }
+      case ACTION_TYPE.SET_USERS:
+        return {
+          ...prevVal,
+          users: action.payload
+        }
+
       default:
         return prevVal;
     }
@@ -107,9 +115,11 @@ export default function App() {
     },
     setProduct: (product: ProductType[]) => {
       //TODO: Set product ketika sudah login atau mengakses halaman home
+      dispatch({ type: ACTION_TYPE.SET_PRODUCTS, payload: product })
     },
     setUser: (users: UserInterface[]) => {
       //TODO: set users ketika sudah login atau mengakses halaman home
+      dispatch({ type: ACTION_TYPE.SET_USERS, payload: users })
     },
   }), [])
 
@@ -123,8 +133,8 @@ export default function App() {
         <Stack.Navigator initialRouteName='home'>
           <Stack.Screen name='login' component={LoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name='home' component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='detail_user' component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='detail_product' component={HomeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='detail_user' component={DetailUser} options={{ headerShown: true }} />
+          <Stack.Screen name='detail_product' component={DetailProduct} options={{ headerShown: true }} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>

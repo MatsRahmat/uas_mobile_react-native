@@ -3,31 +3,19 @@ import * as React from 'react';
 import { globalStyle } from "../utils/styles";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/AuthContext";
+import { sleep } from "../utils/function";
 
-
-const USERS = [
-  {
-    id: 1,
-    username: "jajang",
-    email: "jaja@mail.com",
-    age: 12
-  },
-  {
-    id: 2,
-    username: "jajang",
-    email: "jaja@mail.com",
-    age: 24
-  },
-]
 
 export default function UserListScreen() {
   const navigation = useNavigation();
 
+  const { state } = React.useContext(AuthContext);
 
   const handleClick = (id: number) => {
-    alert("Ini id nya :" + id)
-    // console.log("Pressed")
-    navigation.navigate('detail_user', { userId: id })
+    sleep(() => {
+      navigation.navigate('detail_user', { userId: id })
+    })
   }
   return (
     <>
@@ -37,17 +25,19 @@ export default function UserListScreen() {
             <Text style={[globalStyle.textCenter, globalStyle.header]}>
               Users
             </Text>
-            <View style={{padding: 12, margin: 4}}>
-              <FlatList data={USERS} keyExtractor={(item) => String(item.id)} renderItem={({ item }) => {
-                return (
-                  <TouchableOpacity
-                    style={[globalStyle.button, globalStyle.bgSky, styles.button]}
-                    onPress={() => handleClick(item.id)}
-                  >
-                    <Text style={styles.text}>{item.username}</Text>
-                  </TouchableOpacity>
-                )
-              }} />
+            <View style={{ padding: 12, margin: 4, }}>
+              <ScrollView style={{ overflow: "scroll", flex: 1 }}>
+                <FlatList data={state.users} keyExtractor={(item) => String(item.id)} renderItem={({ item }) => {
+                  return (
+                    <TouchableOpacity
+                      style={[globalStyle.button, globalStyle.bgSky, styles.button]}
+                      onPress={() => handleClick(item.id)}
+                    >
+                      <Text style={styles.text}>{item.username}</Text>
+                    </TouchableOpacity>
+                  )
+                }} />
+              </ScrollView>
             </View>
           </View>
         </SafeAreaView>
